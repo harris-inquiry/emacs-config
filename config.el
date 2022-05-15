@@ -40,7 +40,8 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+;; (setq org-directory "~/org/") ;; default
+(setq org-directory "~/BRAIN/Dashboard/today/")
 
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
@@ -76,26 +77,38 @@
 ;; they are implemented.
 
 
-
 (setq scroll-conservatively 0)
 (setq scroll-step 5)
 (setq scroll-margin 0)
 (setq scroll-down-aggressively 0.1)
 
 
+;; Remapping normal vim-emacs bindings
 (map! :iv "C-c" #'evil-normal-state
       :m "-" #'evil-end-of-line
-      ;; Would rather able to move
+      ;; faster scrolling
+      :m "C-e" (cmd! (evil-scroll-line-down 5))
+      :m "C-y" (cmd! (evil-scroll-line-up 5))
+
+      ;; Remove 'evil-mode' vim rebindings
       :n "C-n" nil
-      :n "C-p" nil)
+      :n "C-p" nil
+      :m "C-b" nil
+      :m "C-f" nil
+
+      ;; jump back with 'Ctrl+-'
+      :n "C--" nil
+      :m "C--" #'better-jumper-jump-backward
+
+      ;; remove 'company' rebinding
+      :i "C-x C-s" nil)
+
+
+
 
 (map! :after (evil-org evil-easymotion)
       :map evil-org-mode-map
       :i "C-k" #'org-kill-line)
-
-;; jump back with 'Ctrl-'
-(map! :n "C--" nil
-      :m "C--" #'better-jumper-jump-backward)
 
 
 (add-hook! org-mode
@@ -103,8 +116,8 @@
     (company-mode -1)) ;; no auto-correct in org-mode
   )
 
-
-
-;;
 ;; TODO -- bigger startup window
-;;
+
+
+;; Additional settings
+(load! "+open-file-in-journal")
