@@ -33,6 +33,7 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one)
+(setq doom-one-brighter-comments t)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -85,7 +86,7 @@
 
 ;; Remapping normal vim-emacs bindings
 (map! :iv "C-c" #'evil-normal-state
-      :m "-" #'evil-end-of-line
+      :m "-" #'evil-end-of-visual-line
       ;; faster scrolling
       :m "C-e" (cmd! (evil-scroll-line-down 5))
       :m "C-y" (cmd! (evil-scroll-line-up 5))
@@ -116,7 +117,51 @@
     (company-mode -1)) ;; no auto-correct in org-mode
   )
 
+
+;; TODO -- question capture
+(defun quarry/set-org-capture-templates ()
+    (setq org-capture-templates
+          '(("t" "Personal todo" entry
+             (file+headline +org-capture-todo-file "Inbox")
+             "* [ ] %?\n%i\n%a" :prepend t)
+            ("n" "Personal notes" entry
+             (file+headline +org-capture-notes-file "Inbox")
+             "* %u %?\n%i\n%a" :prepend t)
+            ("j" "Journal" entry
+             (file+olp+datetree +org-capture-journal-file)
+             "* %U %?\n%i\n%a" :prepend t)
+
+            ("p" "Templates for projects")
+            ("pt" "Project-local todo" entry
+             (file+headline +org-capture-project-todo-file "Inbox")
+             "* TODO %?\n%i\n%a" :prepend t)
+            ("pn" "Project-local notes" entry
+             (file+headline +org-capture-project-notes-file "Inbox")
+             "* %U %?\n%i\n%a" :prepend t)
+            ("pc" "Project-local changelog" entry
+             (file+headline +org-capture-project-changelog-file "Unreleased")
+             "* %U %?\n%i\n%a" :prepend t)
+
+            ("o" "Centralized templates for projects")
+            ("ot" "Project todo" entry
+             #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
+            ("on" "Project notes" entry
+             #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
+            ("oc" "Project changelog" entry
+             #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t))))
+
+
 ;; TODO -- bigger startup window
+
+
+;; TODO -- yas-snippet for '+qdd' blocks -> tracking important questions in org-files
+
+
+;; DONE -- setting js2-mode for js files
+(setq auto-mode-alist
+      (append
+       '(("\\.js[mx]?\\'" . js2-mode))
+       auto-mode-alist))
 
 
 ;; Additional settings
